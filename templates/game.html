@@ -1,0 +1,833 @@
+{% extends 'base.html' %}
+{% block content %}
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h3">Dashboard</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <button id="export" type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                </div>
+            </div>
+        </div>
+        <canvas id="myChart" class="my-4 w-100" width="900" height="200"></canvas>
+        <div class="row g-5">
+            <div class="col-md-5 col-lg-4 order-md-last">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-dark">Estado del Juego</span>
+                </h4>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Conteo</h6>
+                        </div>
+                        <div>
+                            <span id="ball" class="text-info">0</span>
+                            <span class="text-muted">-</span>
+                            <span id="strike" class="text-danger">0</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Outs</h6>
+                        </div>
+                        <div>
+                            <a id="setout" type="button" class="btn btn-secondary btn-sm"><span class="fas fa-plus-circle"></span></a>
+                            <span class="text-muted">  </span>
+                            <span id="outs" class="text-muted">0</span>
+                        </div>
+
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Inning</h6>
+                        </div>
+                        <div>
+                            <span id="inn" class="text-muted">1</span>
+                            <span id="part_inn" class="fas fa-arrow-up"></span>
+                        </div>
+                    </li>
+                </ul>
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-dark">Home Club Plate Discipline</span>
+                </h4>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Swing%</h6>
+                        </div>
+                        <span id="swing" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Contact%</h6>
+                        </div>
+                        <span id="contact" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">F-Strike%</h6>
+                        </div>
+                        <span id="fstroke" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">SwStr%</h6>
+                        </div>
+                        <span id="swstr" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Whiff Rate</h6>
+                        </div>
+                        <span id="whiff" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">GB%</h6>
+                        </div>
+                        <span id="hgb" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">LD%</h6>
+                        </div>
+                        <span id="hld" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">FB%</h6>
+                        </div>
+                        <span id="hfb" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">IFFB%</h6>
+                        </div>
+                        <span id="hiffb" class="text-muted">0</span>
+                    </li>
+                </ul>
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-dark">Visitor Plate Discipline</span>
+                </h4>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Swing%</h6>
+                        </div>
+                        <span id="vswing" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Contact%</h6>
+                        </div>
+                        <span id="vcontact" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">F-Strike%</h6>
+                        </div>
+                        <span id="vfstroke" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">SwStr%</h6>
+                        </div>
+                        <span id="vswstr" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Whiff Rate</h6>
+                        </div>
+                        <span id="vwhiff" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">GB%</h6>
+                        </div>
+                        <span id="vgb" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">LD%</h6>
+                        </div>
+                        <span id="vld" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">FB%</h6>
+                        </div>
+                        <span id="vfb" class="text-muted">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">IFFB%</h6>
+                        </div>
+                        <span id="viffb" class="text-muted">0</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-lg-8">
+                <h4 class="mb-3">Informacion</h4>
+                <form class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="username" class="form-label">Lanzador</label>
+                            <div class="input-group has-validation">
+                                <select class="form-select" id="country" required>
+                                    <option value="">Escoger...</option>
+                                    <option>Wilbert Perez</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Your username is required.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="btn-group dropend">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                Evento
+                            </button>
+                            <ul class="dropdown-menu" style="max-height: 280px; overflow-y: auto;">
+                                <li><a class="dropdown-item">SwingStrike</a></li>
+                                <li><a class="dropdown-item">CallStrike</a></li>
+                                <li><a class="dropdown-item">Foul</a></li>
+                                <li><a class="dropdown-item">Bola</a></li>
+                                <li><a class="dropdown-item">Bola intencional</a></li>
+                                <li><a class="dropdown-item">Roletazo de out</a></li>
+                                <li><a class="dropdown-item">Ponche</a></li>
+                                <li><a class="dropdown-item">Out</a></li>
+                                <li><a class="dropdown-item">Elevado de out</a></li>
+                                <li><a class="dropdown-item">Out dentro del terreno</a></li>
+                                <li><a class="dropdown-item">Linea de out</a></li>
+                                <li><a class="dropdown-item">Out en la inicial</a></li>
+                                <li><a class="dropdown-item">Base robada</a></li>
+                                <li><a class="dropdown-item">Pelotazo</a></li>
+                                <li><a class="dropdown-item">Sencillo</a></li>
+                                <li><a class="dropdown-item">Base por bolas</a></li>
+                                <li><a class="dropdown-item">Doble</a></li>
+                                <li><a class="dropdown-item">Triple</a></li>
+                                <li><a class="dropdown-item">Cuadrangular</a></li>
+                            </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="btn-group" role="group">
+                              <button id="gb" type="button" class="btn btn-primary">GB</button>
+                              <button id="ld" type="button" class="btn btn-secondary">LD</button>
+                              <button id="fb" type="button" class="btn btn-success">FB</button>
+                              <button id="iffb" type="button" class="btn btn-warning">IFFB</button>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="d-grid gap-2">
+                                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                    <button type="button" class="btn btn-warning">Predecir</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="same-address">
+                        <label class="form-check-label" for="same-address">Shipping address is the same as my
+                            billing address</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="save-info">
+                        <label class="form-check-label" for="save-info">Save this information for next time</label>
+                    </div>
+
+                    <hr class="my-4">
+                </form>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block script %}
+    <script>
+        var inn = 1;
+        var top_inn = true;
+        var home = new Team(0,0,0,0,0,0,0,0,0,0);
+        var visitor = new Team(0,0,0,0,0,0,0,0,0,0);
+        //---------------INICIO DEL GRAFICO-------------------
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            labels: ['0'],
+            data: {
+                datasets: [
+                    {
+                        label: 'RP Score Home Pitch',
+                        data: [0],
+                        fill: false,
+                        borderColor: 'rgb(12,134,245)',
+
+                        tension: 0.1
+                    },
+                    {
+                        label: 'RP Score Away Pitch',
+                        data: [0],
+                        fill: false,
+                        borderColor: 'rgb(245,136,6)',
+                        tension: 0.1
+                    },
+                ],
+            },
+            options: {}
+        });
+        var count = 1;
+        var sumHome = 0;
+        var sumAway = 0;
+        myChart.data.labels.push(0);
+        //---------------FINAL DEL GRAFICO-------------------
+
+        //---------------BTN EVENTO-------------------
+        $(".btn-group").on('click', '.dropdown-item', function(e) {
+          var text = $(this).text();
+          var value = 0;
+          var index = top_inn ? 0 : 1;
+          switch (text) {
+              case "CallStrike":
+                  if(top_inn)
+                  {
+                    visitor.pitches++;
+                    if(firstPitch()){
+                        visitor.fstrikes++;
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.pitches++;
+                    if(firstPitch()){
+                        home.fstrikes++;
+                        home.pas++;
+                    }
+                  }
+                  value = strikes();
+                  break;
+              case "SwingStrike":
+                  if(top_inn)
+                  {
+                    visitor.swings++;
+                    visitor.pitches++;
+                    visitor.misses++;
+                    if(firstPitch()){
+                        visitor.fstrikes++;
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.swings++;
+                    home.pitches++;
+                    home.misses++;
+                    if(firstPitch()){
+                        home.fstrikes++;
+                        home.pas++;
+                    }
+                  }
+                  value = strikes();
+                  break;
+              case "Foul":
+                  if(top_inn)
+                  {
+                    visitor.swings++;
+                    visitor.pitches++;
+                    visitor.contacts++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.swings++;
+                    home.pitches++;
+                    home.contacts++;
+                    if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = 0.33;
+                  foul();
+                  break;
+              case "Roletazo de out":
+                  if(top_inn)
+                  {
+                    visitor.swings++;
+                    visitor.pitches++;
+                    visitor.contacts++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.swings++;
+                    home.pitches++;
+                    home.contacts++;
+                    if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = 1;
+                  outs();
+                  break;
+              case "Ponche":
+                  value = 2;
+                  outs();
+                  break;
+              case "Out":
+                  value = 1;
+                  outs();
+                  break;
+              case "Elevado de out":
+                  if(top_inn)
+                  {
+                    visitor.swings++;
+                    visitor.pitches++;
+                    visitor.contacts++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.swings++;
+                    home.pitches++;
+                    home.contacts++;
+                    if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = 1;
+                  outs();
+                  break;
+              case "Out dentro del terreno":
+                  if(top_inn)
+                  {
+                    visitor.swings++;
+                    visitor.pitches++;
+                    visitor.contacts++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.swings++;
+                    home.pitches++;
+                    home.contacts++;
+                    if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = 1;
+                  outs();
+                  break;
+              case "Linea de out":
+                  if(top_inn)
+                  {
+                    visitor.swings++;
+                    visitor.pitches++;
+                    visitor.contacts++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.swings++;
+                    home.pitches++;
+                    home.contacts++;
+                    if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = 1;
+                  outs();
+                  break;
+              case "Out en la inicial":
+                  value = 1;
+                  outs();
+                  break;
+              case "Bola":
+                  if(top_inn)
+                  {
+                    visitor.pitches++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.pitches++;
+                   if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = ball();
+                  break;
+              case "Bola intencional":
+                  value = ball();
+                  break;
+              case "Base robada":
+                  if(top_inn)
+                  {
+                    visitor.pitches++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.pitches++;
+                   if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = -1;
+                  break;
+              case "Pelotazo":
+                  if(top_inn)
+                  {
+                    visitor.pitches++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.pitches++;
+                   if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = -2;
+                  resetConteo();
+                  break;
+              case "Sencillo":
+                  if(top_inn)
+                  {
+                    visitor.swings++;
+                    visitor.pitches++;
+                    visitor.contacts++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.swings++;
+                    home.pitches++;
+                    home.contacts++;
+                    if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = -1;
+                  resetConteo();
+                  break;
+              case "Base por bolas":
+                  value = -1;
+                  resetConteo();
+                  break;
+              case "Doble":
+                  if(top_inn)
+                  {
+                    visitor.swings++;
+                    visitor.pitches++;
+                    visitor.contacts++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.swings++;
+                    home.pitches++;
+                    home.contacts++;
+                    if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = -2;
+                  resetConteo();
+                  break;
+              case "Triple":
+                  if(top_inn)
+                  {
+                    visitor.swings++;
+                    visitor.pitches++;
+                    visitor.contacts++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.swings++;
+                    home.pitches++;
+                    home.contacts++;
+                    if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = -3;
+                  resetConteo();
+                  break;
+              case "Cuadrangular":
+                  if(top_inn)
+                  {
+                    visitor.swings++;
+                    visitor.pitches++;
+                    visitor.contacts++;
+                    if(firstPitch()){
+                        visitor.pas++;
+                    }
+                  }
+                  else
+                  {
+                    home.swings++;
+                    home.pitches++;
+                    home.contacts++;
+                    if(firstPitch()){
+                        home.pas++;
+                    }
+                  }
+                  value = -4;
+                  resetConteo();
+                  break;
+              default:
+                  break;
+          }
+          if (index==0){
+              sumHome += value;
+              document.getElementById('vswing').textContent = (round(visitor.swings / visitor.pitches*100)).toString() + '%';
+              document.getElementById('vcontact').textContent = (round(visitor.contacts / visitor.swings*100)).toString() + '%';
+              document.getElementById('vfstroke').textContent = (round(visitor.fstrikes / visitor.pas*100)).toString() + '%';
+              document.getElementById('vswstr').textContent = (round(visitor.misses / visitor.pitches*100)).toString() + '%';
+              document.getElementById('vwhiff').textContent = (round(visitor.misses / visitor.swings*100)).toString() + '%';
+              sum = sumHome;
+          }
+          else {
+              sumAway += value;
+              document.getElementById('swing').textContent = (round(home.swings / home.pitches*100)).toString() + '%';
+              document.getElementById('contact').textContent = (round(home.contacts / home.swings*100)).toString() + '%';
+              document.getElementById('fstroke').textContent = (round(home.fstrikes / home.pas*100)).toString() + '%';
+              document.getElementById('swstr').textContent = (round(home.misses / home.pitches*100)).toString() + '%';
+              document.getElementById('whiff').textContent = (round(home.misses / home.swings*100)).toString() + '%';
+              sum = sumAway;
+          }
+          myChart.data.datasets[index].data.push(sum);
+          if(index==0 && myChart.data.datasets[0].data.length > myChart.data.datasets[1].data.length)
+          {
+                myChart.data.labels.push(count.toString());
+                count++;
+          }
+          else if(index==1 && myChart.data.datasets[1].data.length > myChart.data.datasets[0].data.length)
+          {
+              myChart.data.labels.push(count.toString());
+              count++;
+          }
+
+          myChart.update();
+        });
+        //---------------FINAL BTN EVENTO-------------------
+
+        //---------------BTN EXPORTAR IMG-------------------
+        document.getElementById("export").addEventListener("click", function () {
+            exportToimage();
+        });
+        //---------------BTN EXPORTAR IMG-------------------
+
+        //---------------BTN ADD OUT-------------------
+        document.getElementById("setout").addEventListener("click", function () {
+            outs();
+        });
+        //---------------BTN ADD OUT-------------------
+
+        //---------------BTN GROUNDBALL-------------------
+        document.getElementById("gb").addEventListener("click", function () {
+            if(top_inn)
+            {
+                visitor.grounds++;
+                var total = visitor.grounds + visitor.flys + visitor.infildfly + visitor.linesdrive;
+                document.getElementById('vgb').textContent = (round(visitor.grounds/total*100)).toString() + '%';
+                document.getElementById('vld').textContent = (round(visitor.linesdrive/total*100)).toString() + '%';
+                document.getElementById('vfb').textContent = (round(visitor.flys/total*100)).toString() + '%';
+                document.getElementById('viffb').textContent = (round(visitor.infildfly/total*100)).toString() + '%';
+            }
+            else
+            {
+                home.grounds++;
+                var total = home.grounds + home.flys + home.infildfly + home.linesdrive;
+                document.getElementById('hgb').textContent = (round(home.grounds/total*100)).toString() + '%';
+                document.getElementById('hld').textContent = (round(home.linesdrive/total*100)).toString() + '%';
+                document.getElementById('hfb').textContent = (round(home.flys/total*100)).toString() + '%';
+                document.getElementById('hiffb').textContent = (round(home.infildfly/total*100)).toString() + '%';
+            }
+        });
+        //---------------BTN GROUNDBALL-------------------
+
+        //---------------BTN LINEDRIVE-------------------
+        document.getElementById("ld").addEventListener("click", function () {
+            if(top_inn)
+            {
+                visitor.linesdrive++;
+                var total = visitor.grounds + visitor.flys + visitor.infildfly + visitor.linesdrive;
+                document.getElementById('vgb').textContent = (round(visitor.grounds/total*100)).toString() + '%';
+                document.getElementById('vld').textContent = (round(visitor.linesdrive/total*100)).toString() + '%';
+                document.getElementById('vfb').textContent = (round(visitor.flys/total*100)).toString() + '%';
+                document.getElementById('viffb').textContent = (round(visitor.infildfly/total*100)).toString() + '%';
+            }
+            else
+            {
+                home.linesdrive++;
+                var total = home.grounds + home.flys + home.infildfly + home.linesdrive;
+                document.getElementById('hgb').textContent = (round(home.grounds/total*100)).toString() + '%';
+                document.getElementById('hld').textContent = (round(home.linesdrive/total*100)).toString() + '%';
+                document.getElementById('hfb').textContent = (round(home.flys/total*100)).toString() + '%';
+                document.getElementById('hiffb').textContent = (round(home.infildfly/total*100)).toString() + '%';
+            }
+        });
+        //---------------BTN LINEDRIVE-------------------
+
+        //---------------BTN FLYBALL-------------------
+        document.getElementById("fb").addEventListener("click", function () {
+            if(top_inn)
+            {
+                visitor.flys++;
+                var total = visitor.grounds + visitor.flys + visitor.infildfly + visitor.linesdrive;
+                document.getElementById('vgb').textContent = (round(visitor.grounds/total*100)).toString() + '%';
+                document.getElementById('vld').textContent = (round(visitor.linesdrive/total*100)).toString() + '%';
+                document.getElementById('vfb').textContent = (round(visitor.flys/total*100)).toString() + '%';
+                document.getElementById('viffb').textContent = (round(visitor.infildfly/total*100)).toString() + '%';
+            }
+            else
+            {
+                home.flys++;
+                var total = home.grounds + home.flys + home.infildfly + home.linesdrive;
+                document.getElementById('hgb').textContent = (round(home.grounds/total*100)).toString() + '%';
+                document.getElementById('hld').textContent = (round(home.linesdrive/total*100)).toString() + '%';
+                document.getElementById('hfb').textContent = (round(home.flys/total*100)).toString() + '%';
+                document.getElementById('hiffb').textContent = (round(home.infildfly/total*100)).toString() + '%';
+            }
+        });
+        //---------------BTN FLYBALL-------------------
+
+        //---------------BTN INFILDFLYBALL-------------------
+        document.getElementById("iffb").addEventListener("click", function () {
+            if(top_inn)
+            {
+                visitor.infildfly++;
+                var total = visitor.grounds + visitor.flys + visitor.infildfly + visitor.linesdrive;
+                document.getElementById('vgb').textContent = (round((visitor.grounds/total*100))).toString() + '%';
+                document.getElementById('vld').textContent = (round(visitor.linesdrive/total*100)).toString() + '%';
+                document.getElementById('vfb').textContent = (round(visitor.flys/total*100)).toString() + '%';
+                document.getElementById('viffb').textContent = (round(visitor.infildfly/total*100)).toString() + '%';
+            }
+            else
+            {
+                home.infildfly++;
+                var total = home.grounds + home.flys + home.infildfly + home.linesdrive;
+                document.getElementById('hgb').textContent = (round(home.grounds/total*100)).toString() + '%';
+                document.getElementById('hld').textContent = (round(home.linesdrive/total*100)).toString() + '%';
+                document.getElementById('hfb').textContent = (round(home.flys/total*100)).toString() + '%';
+                document.getElementById('hiffb').textContent = (round(home.infildfly/total*100)).toString() + '%';
+            }
+        });
+        //---------------BTN INFILDFLYBALL-------------------
+        function outs() {
+            var outs = parseInt(document.getElementById('outs').textContent);
+              outs+=1;
+              if (outs >= 3) {
+                    document.getElementById('strike').textContent = "0";
+                    document.getElementById('ball').textContent = "0";
+                    document.getElementById('outs').textContent = "0";
+                    if(top_inn){
+                        document.getElementById('inn').textContent = inn.toString();
+                        document.getElementById('part_inn').classList.replace('fa-arrow-up', 'fa-arrow-down');
+                        top_inn = false;
+                    }
+                    else
+                    {
+                        inn+=1;
+                        top_inn = true;
+                        document.getElementById('inn').textContent = inn.toString();
+                        document.getElementById('part_inn').classList.replace('fa-arrow-down', 'fa-arrow-up');
+                        document.getElementById('part_inn').classList.replace('fa-arrow-down', 'fa-arrow-up');
+                    }
+                    return;
+              }
+              document.getElementById('strike').textContent = "0";
+              document.getElementById('ball').textContent = "0";
+              document.getElementById('outs').textContent = outs;
+        }
+
+        function round(num) {
+            return Math.round((num + Number.EPSILON) * 100) / 100;
+        }
+
+        function strikes() {
+              var strikes = parseInt(document.getElementById('strike').textContent);
+              strikes+=1;
+              if (strikes >= 3) {
+                    outs();
+                    return 2;
+              }
+              document.getElementById('strike').textContent = strikes;
+              return 0.33;
+        }
+
+        function foul() {
+              var strikes = parseInt(document.getElementById('strike').textContent);
+              strikes+=1;
+              if (strikes >= 3) {
+                    document.getElementById('strike').textContent = "2";
+                    return;
+              }
+              document.getElementById('strike').textContent = strikes;
+        }
+
+        function ball() {
+              var balls = parseInt(document.getElementById('ball').textContent);
+              balls+=1;
+              if (balls >= 4) {
+                    document.getElementById('strike').textContent = "0";
+                    document.getElementById('ball').textContent = "0";
+                    return -1;
+              }
+              document.getElementById('ball').textContent = balls;
+              return -0.25;
+        }
+
+        function resetConteo() {
+            document.getElementById('strike').textContent = "0";
+            document.getElementById('ball').textContent = "0";
+        }
+
+        function exportToimage() {
+            var image = myChart.toBase64Image();
+            var a = document.createElement('a');
+            a.href = image;
+            a.download = 'chart.png';
+            // Trigger the download
+            a.click();
+            console.log(image);
+        }
+
+        function firstPitch() {
+            var s = parseInt(document.getElementById('strike').textContent);
+            var b = parseInt(document.getElementById('ball').textContent);
+
+            return (s==0 && b==0) ? true : false;
+        }
+    </script>
+{% endblock %}

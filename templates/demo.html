@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PitchPredictor</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{ fontawesome_html() }}
+    <!-- Bootstrap CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
+
+    <!-- Chart js -->
+    <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/father-icons.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</head>
+<body>
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span class="fas fa-baseball-ball"></span>
+        PitchPredictor</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+
+</header>
+<div class="container-fluid">
+    <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">
+                            <span class="fas fa-home"></span>
+                            Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span class="fas fa-star"></span>
+                            Preparar Juego
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span class="fas fa-user-circle"></span>
+                            Lanzadores
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h3">Dashboard</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button id="export" type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                    </div>
+                </div>
+            </div>
+            <canvas id="myChart" class="my-4 w-100" width="900" height="200"></canvas>
+            <div class="row g-5">
+                <div class="col-md-5 col-lg-4 order-md-last">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-primary">Estado del Juego</span>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">Conteo</h6>
+                            </div>
+                            <span class="text-muted">0 0</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">Outs</h6>
+                            </div>
+                            <span class="text-muted">0</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">Carreras</h6>
+                            </div>
+                            <span class="text-muted">0</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">Inning</h6>
+                            </div>
+                            <span class="text-muted">1 <span class="fas fa-arrow-up"></span></span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-7 col-lg-8">
+                    <h4 class="mb-3">Informacion</h4>
+                    <form class="needs-validation" novalidate>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="username" class="form-label">Lanzador</label>
+                                <div class="input-group has-validation">
+                                    <select class="form-select" id="country" required>
+                                        <option value="">Escoger...</option>
+                                        <option>Wilbert Perez</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Your username is required.
+                                    </div>
+                                </div>
+                            </div>
+
+                           <div class="col-md-5">
+                            <div class="btn-group dropend">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                Evento
+                            </button>
+                            <ul class="dropdown-menu" style="max-height: 280px; overflow-y: auto;">
+                                <li><a class="dropdown-item">Strike</a></li>
+                                <li><a class="dropdown-item">Foul</a></li>
+                                <li><a class="dropdown-item">Roletazo de out</a></li>
+                                <li><a class="dropdown-item">Ponche</a></li>
+                                <li><a class="dropdown-item">Out</a></li>
+                                <li><a class="dropdown-item">Elevado de out</a></li>
+                                <li><a class="dropdown-item">Out dentro del terreno</a></li>
+                                <li><a class="dropdown-item">Linea de out</a></li>
+                                <li><a class="dropdown-item">Out en la inicial</a></li>
+                                <li><a class="dropdown-item">Bola</a></li>
+                                <li><a class="dropdown-item">Bola intencional</a></li>
+                                <li><a class="dropdown-item">Base robada</a></li>
+                                <li><a class="dropdown-item">Pelotazo</a></li>
+                                <li><a class="dropdown-item">Sencillo</a></li>
+                                <li><a class="dropdown-item">Base por bolas</a></li>
+                                <li><a class="dropdown-item">Doble</a></li>
+                                <li><a class="dropdown-item">Triple</a></li>
+                                <li><a class="dropdown-item">Cuadrangular</a></li>
+                            </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="d-grid gap-2">
+                                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                    <button type="button" class="btn btn-warning">Predecir</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                            <div class="col-md-4">
+                                <label for="state" class="form-label">Opción</label>
+                                    <div class="d-grid gap-2">
+                                        <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                            <button id="btn" type="button" class="btn btn-primary">Pitc</button>
+                                            <button type="button" class="btn btn-warning">Predecir</button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="same-address">
+                            <label class="form-check-label" for="same-address">Shipping address is the same as my
+                                billing address</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="save-info">
+                            <label class="form-check-label" for="save-info">Save this information for next time</label>
+                        </div>
+
+                        <hr class="my-4">
+                    </form>
+                </div>
+
+        </main>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var lanzamientos = [1, 2, -1, 4, -1, 1, 2];
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        labels: ['0'],
+        data: {
+            datasets: [{
+                label: 'Running Pitch Score',
+                data: [0],
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }],
+        },
+        options: {}
+    });
+    var count = 1;
+     var sum = 0;
+        myChart.data.labels.push(0);
+        $(".btn-group").on('click', '.dropdown-item', function(e) {
+          var text = $(this).text();
+          var value = 0;
+          switch (text) {
+              case "Strike":
+                  value = 0.33;
+                  break;
+              case "Foul":
+                  value = 0.33;
+                  break;
+              case "Roletazo de out":
+                  value = 1;
+                  break;
+              case "Ponche":
+                  value = 2;
+                  break;
+              case "Out":
+                  value = 1;
+                  break;
+              case "Elevado de out":
+                  value = 1;
+                  break;
+              case "Out dentro del terreno":
+                  value = 1;
+                  break;
+              case "Linea de out":
+                  value = 1;
+                  break;
+              case "Out en la inicial":
+                  value = 1;
+                  break;
+              case "Bola":
+                  value = -0.25;
+                  break;
+              case "Bola intencional":
+                  value = -0.25;
+                  break;
+              case "Base robada":
+                  value = -1;
+                  break;
+              case "Pelotazo":
+                  value = -2;
+                  break;
+              case "Sencillo":
+                  value = -1;
+                  break;
+              case "Base por bolas":
+                  value = -1;
+                  break;
+              case "Doble":
+                  value = -2;
+                  break;
+              case "Triple":
+                  value = -3;
+                  break;
+              case "Cuadrangular":
+                  value = -4;
+                  break;
+              default:
+                  break;
+
+          }
+          sum += value;
+          //alert(sum+" evento no: "+count);
+          myChart.data.datasets[0].data.push(sum);
+          myChart.data.labels.push(count.toString());
+          myChart.update();
+          count++;
+
+        });
+    /*document.getElementById("btn").addEventListener("click", function () {
+        myChart.data.datasets[0].data.push(Math.floor(Math.random() * 10));
+        myChart.data.labels.push(count.toString());
+        // myChart.data.datasets[0].data.push(count);
+        myChart.update();
+        count++;
+    });*/
+    document.getElementById("export").addEventListener("click", function () {
+        myChart
+        var chartData = {
+        labels : [{% for item in labels %}
+        "{{item}}",
+        {% endfor %}],
+        datasets : [{
+        label: '{{ legend }}',
+        fill: true,
+        lineTension: 0.1,
+        backgroundColor: "rgba(75,192,192,0.4)",
+        borderColor: "rgba(75,192,192,1)",
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: "rgba(75,192,192,1)",
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "rgba(75,192,192,1)",
+        pointHoverBorderColor: "rgba(220,220,220,1)",
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data : [{% for item in values %}
+{{item}},
+{% endfor %}],
+spanGaps: false
+}]
+}
+
+// get chart canvas
+var ctx = document.getElementById("myChart").getContext("2d");
+
+// create the chart using the chart canvas
+var myChart = new Chart(ctx, {
+type: 'line',
+data: chartData,
+});
+
+    });
+
+</script>
